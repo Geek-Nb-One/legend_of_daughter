@@ -13,6 +13,11 @@ public:
     bool operator<(const GameObject &other) const;
 
     Transform transform;
+
+    enum Direction{Top, Down, Left, Right};
+    enum Action{Idle,Walk,Attack};
+    
+
   
 
 };

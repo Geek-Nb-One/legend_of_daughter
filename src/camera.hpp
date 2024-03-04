@@ -14,6 +14,7 @@ public:
     void init();
     void update(double dt);
 
+    void render(SDL_Renderer* renderer,SDL_Texture* texture, const SDL_Rect* crop, Transform* position);
     SDL_Rect getScreenRect(int x, int y) const;
 
     const SDL_Rect& getView() const;
@@ -23,6 +24,9 @@ private:
     Map* map;
 
     SDL_Rect view;
+
+
+    bool objectIsInBound(int x, int y)const;
 
 
 };

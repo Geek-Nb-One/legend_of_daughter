@@ -32,6 +32,16 @@ void Camera::update(double dt)
 
 }
 
+void Camera::render(SDL_Renderer* renderer,SDL_Texture *texture, const SDL_Rect *crop,Transform * position)
+{
+    if(objectIsInBound(position->x,position->y)){
+        int screenX = position->x - view.x;
+        int screenY = position->y - view.y;
+        SDL_Rect loc{screenX,screenY, crop->w,crop->h};
+        SDL_RenderCopy(renderer,texture,crop,&loc);
+    }
+}
+
 SDL_Rect Camera::getScreenRect(int x, int y) const
 {
     return {x - view.x,y- view.y};
@@ -40,4 +50,11 @@ SDL_Rect Camera::getScreenRect(int x, int y) const
 const SDL_Rect &Camera::getView() const
 {
     return view;
+}
+
+bool Camera::objectIsInBound(int x, int y) const
+{
+    x-= view.x;
+    y -= view.y;
+    return ( x >= 0 &&  y >= 0 && x <= view.w && y <= view.h );
 }

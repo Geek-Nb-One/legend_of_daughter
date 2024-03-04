@@ -7,36 +7,46 @@
 #include <SDL2/SDL.h>
 #include <map>
 #include <string>
+#include <deque>
 
-
-class Player: public GameObject{
+class Player : public GameObject
+{
 
 public:
-    Player(InputController * inputController,SDL_Renderer * renderer);
+    Player(InputController *inputController, SDL_Renderer *renderer);
 
     void update(double dt) override;
-    void render(SDL_Renderer * renderer,Camera* camera) override;
+    void render(SDL_Renderer *renderer, Camera *camera) override;
+
+    void loadTexture(SDL_Renderer *renderer, const char *file, const char* weapon);
+
 private:
-
     int speed = 200;
-    InputController * inputController;
+    bool isMoving = false;
 
+    double bufferTimer = 0.0;
+    Action actionBuffer;
 
-    std::map<std::string,Animation> animations;
-    std::map<std::string, SpriteSheet> spriteSheets;
+    Direction direction = Direction::Down;
+    Action action = Action::Idle;
+    InputController *inputController;
 
-    // Animation  walkFrontAnimation{4,4};
-    // Animation walkRightAnimation{4,4};
-    // Animation walkLeftAnimation{4,4};
-    // Animation walkBackAnimation{4,4};
+    std::map<std::pair<Direction, Action>, Animation> animations;
 
-    // SpriteSheet walkFrontSheet;
-    // SpriteSheet walkRightSheet;
-    // SpriteSheet walkLeftSheet;
-    // SpriteSheet walkBackSheet;
+    Animation *currentAnimation;
+    SDL_Texture *texture;
 
-    Animation * currentAnimation;
+    void initAnim(int index, Direction direction);
 
-    void addAnimation(SDL_Renderer* renderer,const char* file,std::string name);
+    struct Command
+    {
+        Action action;
+        double timer=0.0;
 
+        Command (Action action): action(action){}
+    };
+
+    std::deque<Command> buffer;
+    int bufferLength = 1;
+    double bufferDuration = 1.0;
 };
